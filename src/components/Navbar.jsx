@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
 import { Phone, Send, MessageCircle, Clock, MapPin, Menu, X, ShieldCheck, Truck } from 'lucide-react';
 
-export default function Navbar({ onOpenOrderModal, onOpenCalculator }) {
+export default function Navbar({ onOpenOrderModal }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
 
   const navLinks = [
     { name: 'Головна', path: '/' },
-    { name: 'Послуги', path: '/#services' },
-    { name: 'Ціни', path: '/#prices' },
+    { name: 'Послуги', path: '/services' },
+    { name: 'Ціни', path: '/prices' },
     { name: 'Автопарк', path: '/fleet' },
-    { name: 'Наші роботи', path: '/#portfolio' },
-    { name: 'Для бізнесу', path: '/#business' },
+    { name: 'Наші роботи', path: '/portfolio' },
+    { name: 'Для бізнесу', path: '/business' },
+    { name: 'Відгуки', path: '/reviews' },
     { name: 'Контакти', path: '/contacts' },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <header className="sticky top-0 z-40 w-full bg-slate-950/95 backdrop-blur-md border-b border-slate-800/80">
       {/* Top Banner Bar */}
       <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/20 to-amber-500/10 border-b border-amber-500/20 py-1.5 text-xs text-slate-300">
         <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-2">
@@ -84,15 +84,22 @@ export default function Navbar({ onOpenOrderModal, onOpenCalculator }) {
         </Link>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+        <nav className="hidden lg:flex items-center gap-5 text-sm font-medium">
           {navLinks.map((link) => (
-            <a
+            <NavLink
               key={link.name}
-              href={link.path}
-              className="hover:text-amber-400 transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-amber-400 hover:after:w-full after:transition-all"
+              to={link.path}
+              end={link.path === '/'}
+              className={({ isActive }) =>
+                `transition-colors py-1 relative text-xs xl:text-sm font-semibold ${
+                  isActive
+                    ? 'text-amber-400 font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400'
+                    : 'text-slate-300 hover:text-amber-300'
+                }`
+              }
             >
               {link.name}
-            </a>
+            </NavLink>
           ))}
         </nav>
 
@@ -116,7 +123,7 @@ export default function Navbar({ onOpenOrderModal, onOpenCalculator }) {
 
           <button
             onClick={onOpenOrderModal}
-            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-105 active:scale-95"
+            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-105 active:scale-95"
           >
             Замовити
           </button>
@@ -137,14 +144,19 @@ export default function Navbar({ onOpenOrderModal, onOpenCalculator }) {
         <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-4 py-4 space-y-4">
           <div className="flex flex-col space-y-2">
             {navLinks.map((link) => (
-              <a
+              <NavLink
                 key={link.name}
-                href={link.path}
+                to={link.path}
+                end={link.path === '/'}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-slate-200 hover:text-amber-400 font-medium text-base py-2 border-b border-slate-800/50"
+                className={({ isActive }) =>
+                  `font-medium text-base py-2.5 border-b border-slate-800/50 flex items-center justify-between ${
+                    isActive ? 'text-amber-400 font-bold' : 'text-slate-200 hover:text-amber-300'
+                  }`
+                }
               >
-                {link.name}
-              </a>
+                <span>{link.name}</span>
+              </NavLink>
             ))}
           </div>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
-import { Truck, Phone, MapPin, Clock, Send, MessageCircle, ArrowUp } from 'lucide-react';
+import { Truck, MapPin, Clock, Send, MessageCircle, ArrowUp } from 'lucide-react';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -65,13 +65,14 @@ export default function Footer() {
           <div className="space-y-3">
             <h4 className="text-sm font-bold text-white font-outfit uppercase">Навігація</h4>
             <ul className="space-y-2 font-medium">
-              <li><a href="/" className="hover:text-amber-400 transition-colors">Головна</a></li>
-              <li><a href="/#services" className="hover:text-amber-400 transition-colors">Послуги</a></li>
-              <li><a href="/#prices" className="hover:text-amber-400 transition-colors">Ціни</a></li>
-              <li><a href="/fleet" className="hover:text-amber-400 transition-colors">Вантажний автопарк</a></li>
-              <li><a href="/#portfolio" className="hover:text-amber-400 transition-colors">Наші роботи</a></li>
-              <li><a href="/#business" className="hover:text-amber-400 transition-colors">Для бізнесу</a></li>
-              <li><a href="/contacts" className="hover:text-amber-400 transition-colors">Контакти</a></li>
+              <li><Link to="/" className="hover:text-amber-400 transition-colors">Головна</Link></li>
+              <li><Link to="/services" className="hover:text-amber-400 transition-colors">Послуги</Link></li>
+              <li><Link to="/prices" className="hover:text-amber-400 transition-colors">Ціни</Link></li>
+              <li><Link to="/fleet" className="hover:text-amber-400 transition-colors">Вантажний автопарк</Link></li>
+              <li><Link to="/portfolio" className="hover:text-amber-400 transition-colors">Наші роботи</Link></li>
+              <li><Link to="/business" className="hover:text-amber-400 transition-colors">Для бізнесу</Link></li>
+              <li><Link to="/reviews" className="hover:text-amber-400 transition-colors">Відгуки клієнтів</Link></li>
+              <li><Link to="/contacts" className="hover:text-amber-400 transition-colors">Контакти</Link></li>
             </ul>
           </div>
 
@@ -105,7 +106,7 @@ export default function Footer() {
 
         </div>
 
-        {/* SEO Keywords Tag Cloud (TZ Line 180-194) */}
+        {/* SEO Keywords Tag Cloud */}
         <div className="pt-8 border-t border-slate-900 space-y-3">
           <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Популярні пошукові запити:</p>
           <div className="flex flex-wrap gap-2 text-[10px] text-slate-500">

@@ -5,9 +5,16 @@ import Footer from './components/Footer';
 import StickyMobileBar from './components/StickyMobileBar';
 import OrderModal from './components/OrderModal';
 import CostCalculatorModal from './components/CostCalculatorModal';
+import ScrollToTop from './components/ScrollToTop';
+
 import HomePage from './pages/HomePage';
+import ServicesPage from './pages/ServicesPage';
 import ServiceDetail from './pages/ServiceDetail';
+import PricesPage from './pages/PricesPage';
 import FleetPage from './pages/FleetPage';
+import PortfolioPage from './pages/PortfolioPage';
+import BusinessPage from './pages/BusinessPage';
+import ReviewsPage from './pages/ReviewsPage';
 import ContactsPage from './pages/ContactsPage';
 
 export default function App() {
@@ -31,6 +38,7 @@ export default function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans">
         <Navbar
           onOpenOrderModal={() => handleOpenOrderModal()}
@@ -49,9 +57,22 @@ export default function App() {
               }
             />
             <Route
+              path="/services"
+              element={<ServicesPage onOpenOrderModal={handleOpenOrderModal} />}
+            />
+            <Route
               path="/services/:serviceId"
               element={
                 <ServiceDetail
+                  onOpenOrderModal={handleOpenOrderModal}
+                  onOpenCalculator={handleOpenCalculator}
+                />
+              }
+            />
+            <Route
+              path="/prices"
+              element={
+                <PricesPage
                   onOpenOrderModal={handleOpenOrderModal}
                   onOpenCalculator={handleOpenCalculator}
                 />
@@ -62,6 +83,18 @@ export default function App() {
               element={<FleetPage onOpenOrderModal={handleOpenOrderModal} />}
             />
             <Route
+              path="/portfolio"
+              element={<PortfolioPage onOpenOrderModal={handleOpenOrderModal} />}
+            />
+            <Route
+              path="/business"
+              element={<BusinessPage onOpenOrderModal={handleOpenOrderModal} />}
+            />
+            <Route
+              path="/reviews"
+              element={<ReviewsPage onOpenOrderModal={handleOpenOrderModal} />}
+            />
+            <Route
               path="/contacts"
               element={<ContactsPage onOpenOrderModal={handleOpenOrderModal} />}
             />
@@ -70,7 +103,7 @@ export default function App() {
 
         <Footer />
 
-        {/* Persistent Bottom Sticky Bar for Smartphones */}
+        {/* Persistent Bottom Sticky Bar for Mobile */}
         <StickyMobileBar onOpenOrderModal={() => handleOpenOrderModal()} />
 
         {/* Global Modals */}
