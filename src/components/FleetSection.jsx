@@ -91,7 +91,7 @@ export default function FleetSection({ onOpenOrderModal }) {
 
               <div className="pt-6 mt-4 border-t border-slate-800">
                 <button
-                  onClick={() => onOpenOrderModal(`Замовлення авто: ${vehicle.name}`)}
+                  onClick={() => onOpenOrderModal(vehicle.name)}
                   className="w-full bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl border border-slate-700 hover:border-amber-500 transition-all"
                 >
                   ЗАМОВИТИ ЦЕЙ АВТОМОБІЛЬ
