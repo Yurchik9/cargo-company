@@ -1,9 +1,18 @@
 import React from 'react';
 import { siteConfig } from '../config/siteConfig';
-import { Phone, Calculator, ShoppingBag, ShieldCheck, Clock, Award, Zap, CheckCircle } from 'lucide-react';
+import { Phone, Calculator, ShoppingBag, Clock, Award, CheckCircle } from 'lucide-react';
 import loadersWorkingImg from '../assets/images/loaders_working.png';
 
 export default function HeroSection({ onOpenOrderModal, onOpenCalculator }) {
+  const handleHeroOrderClick = () => {
+    const formElement = document.getElementById('order-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      onOpenOrderModal();
+    }
+  };
+
   return (
     <section className="relative pt-8 pb-16 lg:py-24 overflow-hidden bg-slate-950">
       {/* Background Gradients & Glow Effects */}
@@ -48,19 +57,21 @@ export default function HeroSection({ onOpenOrderModal, onOpenCalculator }) {
               • Працюємо з квартирами, офісами, складами, підприємствами та важким обладнанням.
             </p>
 
-            {/* 3 Primary Action Buttons (From TZ lines 19-24) */}
+            {/* 3 Primary Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4">
               <button
-                onClick={onOpenOrderModal}
-                className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm uppercase tracking-wider py-4 px-6 rounded-xl shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-105 active:scale-95"
+                type="button"
+                onClick={handleHeroOrderClick}
+                className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm uppercase tracking-wider py-4 px-6 rounded-xl shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <ShoppingBag className="w-5 h-5 stroke-[2.5]" />
                 ЗАМОВИТИ ВАНТАЖНИКІВ
               </button>
 
               <button
-                onClick={onOpenCalculator}
-                className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-400 font-bold text-sm uppercase tracking-wider py-4 px-6 rounded-xl shadow-lg hover:border-amber-400 transition-all hover:scale-105 active:scale-95"
+                type="button"
+                onClick={() => onOpenCalculator()}
+                className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-400 font-bold text-sm uppercase tracking-wider py-4 px-6 rounded-xl shadow-lg hover:border-amber-400 transition-all hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <Calculator className="w-5 h-5" />
                 РОЗРАХУВАТИ ВАРТІСТЬ

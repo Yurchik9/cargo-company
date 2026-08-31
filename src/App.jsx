@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import StickyMobileBar from './components/StickyMobileBar';
@@ -8,9 +8,8 @@ import CostCalculatorModal from './components/CostCalculatorModal';
 import ScrollToTop from './components/ScrollToTop';
 
 import HomePage from './pages/HomePage';
-import ServicesPage from './pages/ServicesPage';
+import ServicesPricesPage from './pages/ServicesPricesPage';
 import ServiceDetail from './pages/ServiceDetail';
-import PricesPage from './pages/PricesPage';
 import FleetPage from './pages/FleetPage';
 import PortfolioPage from './pages/PortfolioPage';
 import BusinessPage from './pages/BusinessPage';
@@ -21,9 +20,24 @@ export default function App() {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [calculatorModalOpen, setCalculatorModalOpen] = useState(false);
   const [initialService, setInitialService] = useState('');
+  const [contextState, setContextState] = useState(null);
 
-  const handleOpenOrderModal = (serviceName = '') => {
-    setInitialService(serviceName);
+  const handleOpenOrderModal = (serviceParam = '', customContext = null) => {
+    // Check if serviceParam is a React SyntheticEvent object
+    const isSyntheticEvent = serviceParam && typeof serviceParam === 'object' && (serviceParam.nativeEvent || serviceParam._reactName || serviceParam.target);
+
+    if (typeof serviceParam === 'object' && serviceParam !== null && !isSyntheticEvent) {
+      setInitialService(serviceParam.service || 'Вантажники Львів');
+      setContextState({
+        service: serviceParam.service || 'Вантажники Львів',
+        transport: serviceParam.transport || 'Без автомобіля (тільки вантажники)',
+        description: serviceParam.summary || serviceParam.description || ''
+      });
+    } else {
+      const cleanService = typeof serviceParam === 'string' ? serviceParam : '';
+      setInitialService(cleanService);
+      setContextState(customContext);
+    }
     setOrderModalOpen(true);
   };
 
@@ -31,13 +45,12 @@ export default function App() {
     setCalculatorModalOpen(true);
   };
 
-  const handleApplyCalculation = (calcSummary) => {
-    setInitialService(`Розрахунок з калькулятора: ${calcSummary}`);
-    setOrderModalOpen(true);
+  const handleApplyCalculation = (calcData) => {
+    handleOpenOrderModal(calcData);
   };
 
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <ScrollToTop />
       <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans">
         <Navbar
@@ -56,23 +69,20 @@ export default function App() {
                 />
               }
             />
+            {/* Single Unified Services & Pricing Route */}
             <Route
               path="/services"
-              element={<ServicesPage onOpenOrderModal={handleOpenOrderModal} />}
+              element={<ServicesPricesPage onOpenOrderModal={handleOpenOrderModal} />}
+            />
+            {/* Redirect /prices directly to /services */}
+            <Route
+              path="/prices"
+              element={<Navigate to="/services" replace />}
             />
             <Route
               path="/services/:serviceId"
               element={
                 <ServiceDetail
-                  onOpenOrderModal={handleOpenOrderModal}
-                  onOpenCalculator={handleOpenCalculator}
-                />
-              }
-            />
-            <Route
-              path="/prices"
-              element={
-                <PricesPage
                   onOpenOrderModal={handleOpenOrderModal}
                   onOpenCalculator={handleOpenCalculator}
                 />
@@ -111,6 +121,7 @@ export default function App() {
           isOpen={orderModalOpen}
           onClose={() => setOrderModalOpen(false)}
           initialService={initialService}
+          initialContextState={contextState}
         />
 
         <CostCalculatorModal

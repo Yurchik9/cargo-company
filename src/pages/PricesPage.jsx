@@ -11,7 +11,7 @@ export default function PricesPage({ onOpenOrderModal, onOpenCalculator }) {
   return (
     <main className="pt-6 pb-16 bg-slate-950 text-slate-100 min-h-screen space-y-12">
       <PricesSection onOpenCalculator={onOpenCalculator} onOpenOrderModal={onOpenOrderModal} />
-      <CostCalculatorInline onApplyCalculation={(calcSummary) => onOpenOrderModal(`Розрахунок з калькулятора: ${calcSummary}`)} />
+      <CostCalculatorInline onApplyCalculation={(calcData) => onOpenOrderModal(calcData)} />
       <CtaBlock onOpenOrderModal={onOpenOrderModal} />
     </main>
   );

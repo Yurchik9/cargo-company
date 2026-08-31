@@ -155,6 +155,14 @@ export const siteConfig = {
     }
   ],
 
+  transportOptions: [
+    { id: "none", title: "Без автомобіля (тільки вантажники)", price: "0 грн" },
+    { id: "bus-small", title: "Вантажний бус / Газель (1.5 - 2т)", price: "від 450 грн/год" },
+    { id: "bus-hydroboard", title: "Бус з ГІДРОБОРТОМ (3т)", price: "від 650 грн/год" },
+    { id: "truck-5t", title: "Вантажівка 5 тонн (35-40 м³)", price: "від 850 грн/год" },
+    { id: "rigging-spec", title: "Спецтранспорт для такелажу (10+т)", price: "договірна" }
+  ],
+
   fleet: [
     {
       id: "gazelle-small",
