@@ -1,38 +1,74 @@
 import React, { useState } from 'react';
 import { siteConfig } from '../config/siteConfig';
-import { ShoppingBag, User, Phone, MapPin, Calendar, Clock, FileText, CheckCircle2, Send } from 'lucide-react';
+import PhoneInputCustom from './PhoneInputCustom';
+import { User, MapPin, Tag, Truck, CheckCircle2, Send, MessageCircle } from 'lucide-react';
 
 export default function QuickOrderSection() {
+  const todayStr = new Date().toISOString().split('T')[0];
+
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
+    phone: '+380',
     service: siteConfig.services[0].title,
+    transport: siteConfig.transportOptions[0].title,
     address: '',
-    date: '',
-    time: '',
+    date: todayStr,
+    time: '12:00',
     description: ''
   });
 
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ loading: false, success: false, error: '' });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
   };
+
+  const handlePhoneChange = (newPhoneVal) => {
+    setFormData((prev) => ({ ...prev, phone: newPhoneVal }));
+    if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Будь ласка, вкажіть ваше ім'я";
+    
+    const digitsCount = formData.phone.replace(/[^\d]/g, '').length;
+    if (digitsCount < 10) newErrors.phone = "Вкажіть дійсний номер телефону з кодом країни";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const selectedServiceObj = siteConfig.services.find(s => s.title === formData.service) || siteConfig.services[0];
+  const selectedTransportObj = siteConfig.transportOptions.find(t => t.title === formData.transport) || siteConfig.transportOptions[0];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setStatus({ loading: true, success: false, error: '' });
 
     const messageText = `
-📦 **НОВЕ ЗАМОВЛЕННЯ (ФОРМА НА САЙТІ)**
+📦 **НОВЕ ЗАМОВЛЕННЯ (ФОРМА НА ГОЛОВНІЙ)**
 👤 **Ім'я:** ${formData.name}
 📞 **Телефон:** ${formData.phone}
-🛠 **Послуга:** ${formData.service}
-📍 **Адреса:** ${formData.address || 'Не вказано'}
-📅 **Дата:** ${formData.date || 'Терміново'}
-⏰ **Час:** ${formData.time || 'Найближчий'}
-📝 **Опис:** ${formData.description || 'Немає опису'}
+🛠 **Послуга:** ${formData.service} (${selectedServiceObj.price})
+🚚 **Транспорт:** ${formData.transport} (${selectedTransportObj.price})
+📍 **Адреса:** ${formData.address || 'Не вказано (Львів)'}
+📅 **Дата:** ${formData.date}
+⏰ **Час:** ${formData.time}
+
+📝 **КОМЕНТАР:**
+${formData.description || 'Немає опису'}
     `.trim();
 
     try {
@@ -72,7 +108,7 @@ export default function QuickOrderSection() {
               ФОРМА ЗАМОВЛЕННЯ <span className="text-gradient-amber">ВАНТАЖНИКІВ</span>
             </h2>
             <p className="text-xs sm:text-sm text-slate-400">
-              Заповніть заявку — ми зателефонуємо протягом 5 хвилин для уточнення деталей.
+              Заповніть форму — диспетчер зв'яжеться протягом 5 хвилин для уточнення замовлення.
             </p>
           </div>
 
@@ -95,109 +131,139 @@ export default function QuickOrderSection() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 pt-2">
               
+              {/* Dynamic Order Context Summary Header */}
+              <div className="bg-gradient-to-r from-amber-500/15 via-slate-950 to-slate-950 p-4 rounded-2xl border border-amber-500/30 space-y-2">
+                <div className="flex items-center justify-between text-xs border-b border-slate-800/80 pb-2">
+                  <span className="text-slate-400 flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-amber-400" /> Тариф послуги:
+                  </span>
+                  <span className="font-extrabold text-amber-400">{selectedServiceObj.price}</span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400 flex items-center gap-1.5">
+                    <Truck className="w-3.5 h-3.5 text-emerald-400" /> Тариф транспорту:
+                  </span>
+                  <span className="font-extrabold text-emerald-400">{selectedTransportObj.price}</span>
+                </div>
+              </div>
+
+              {/* SEPARATE FIELD 1: Service Selection */}
+              <div>
+                <label className="block text-xs font-bold text-slate-300 mb-1">
+                  1. Послуга / Вид робіт <span className="text-amber-400">*</span>
+                </label>
+                <select
+                  name="service"
+                  value={formData.service}
+                  onChange={handleChange}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white font-medium focus:outline-none focus:border-amber-500 transition-colors"
+                >
+                  {siteConfig.services.map((s) => (
+                    <option key={s.id} value={s.title}>
+                      {s.title} — ({s.price})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* SEPARATE FIELD 2: Transport Selection */}
+              <div>
+                <label className="block text-xs font-bold text-slate-300 mb-1">
+                  2. Вантажний транспорт <span className="text-amber-400">*</span>
+                </label>
+                <select
+                  name="transport"
+                  value={formData.transport}
+                  onChange={handleChange}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white font-medium focus:outline-none focus:border-amber-500 transition-colors"
+                >
+                  {siteConfig.transportOptions.map((t) => (
+                    <option key={t.id} value={t.title}>
+                      {t.title} — ({t.price})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Name & Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Name */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Ім'я <span className="text-amber-400">*</span>
+                    Ваше ім'я <span className="text-amber-400">*</span>
                   </label>
                   <div className="relative">
                     <User className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" />
                     <input
                       type="text"
                       name="name"
-                      required
                       placeholder="Ваше ім'я"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors"
+                      className={`w-full bg-slate-950 border ${
+                        errors.name ? 'border-rose-500' : 'border-slate-800 focus:border-amber-500'
+                      } rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none transition-colors`}
                     />
                   </div>
+                  {errors.name && <p className="text-[11px] text-rose-400 font-semibold mt-1">{errors.name}</p>}
                 </div>
 
-                {/* Phone */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
                     Номер телефону <span className="text-amber-400">*</span>
                   </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" />
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      placeholder="+380 (__) ___-__-__"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors"
-                    />
-                  </div>
+                  <PhoneInputCustom
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    error={errors.phone}
+                  />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Service */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Яка послуга потрібна
-                  </label>
-                  <select
-                    name="service"
-                    value={formData.service}
-                    onChange={handleChange}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
-                  >
-                    {siteConfig.services.map((s) => (
-                      <option key={s.id} value={s.title}>
-                        {s.title} ({s.price})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Address */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Адреса (район / вулиця / область)
-                  </label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" />
-                    <input
-                      type="text"
-                      name="address"
-                      placeholder="Адреса завантаження або вивантаження"
-                      value={formData.address}
-                      onChange={handleChange}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                {/* Date */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Дата</label>
+              {/* Address */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Адреса (район / вулиця / область)
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" />
                   <input
                     type="text"
+                    name="address"
+                    placeholder="Адреса завантаження або вивантаження"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Native Date & Time Pickers */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Оберіть дату
+                  </label>
+                  <input
+                    type="date"
                     name="date"
-                    placeholder="Терміново / 30.08"
+                    min={todayStr}
                     value={formData.date}
                     onChange={handleChange}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
                   />
                 </div>
 
-                {/* Time */}
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Орієнтовний час</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Оберіть час
+                  </label>
                   <input
-                    type="text"
+                    type="time"
                     name="time"
-                    placeholder="Наприклад: 14:00"
                     value={formData.time}
                     onChange={handleChange}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
                   />
                 </div>
               </div>
@@ -209,11 +275,11 @@ export default function QuickOrderSection() {
                 </label>
                 <textarea
                   name="description"
-                  rows="2"
+                  rows="3"
                   placeholder="Наприклад: потрібно 2 вантажники на 3 години для квартирного переїзду..."
                   value={formData.description}
                   onChange={handleChange}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors resize-none"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors resize-none leading-relaxed"
                 ></textarea>
               </div>
 

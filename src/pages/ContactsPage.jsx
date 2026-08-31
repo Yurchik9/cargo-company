@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { siteConfig } from '../config/siteConfig';
-import { Phone, Send, MessageCircle, Clock, MapPin, ShieldCheck, Mail, Building2 } from 'lucide-react';
-import CtaBlock from '../components/CtaBlock';
+import { Phone, Send, MessageCircle, Clock, MapPin, ShieldCheck, Mail, Building2, ShoppingBag } from 'lucide-react';
 
 export default function ContactsPage({ onOpenOrderModal }) {
   useEffect(() => {
@@ -58,6 +57,14 @@ export default function ContactsPage({ onOpenOrderModal }) {
                 </a>
               ))}
             </div>
+
+            <button
+              onClick={() => onOpenOrderModal()}
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider py-3.5 rounded-xl shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-95"
+            >
+              <ShoppingBag className="w-4 h-4 stroke-[2.5]" />
+              Оформити онлайн замовлення
+            </button>
 
             <div className="text-xs text-slate-400 flex items-center gap-2 pt-2">
               <Clock className="w-4 h-4 text-amber-400 shrink-0" />
@@ -123,7 +130,7 @@ export default function ContactsPage({ onOpenOrderModal }) {
               <MapPin className="w-5 h-5 text-amber-400" /> Львів та Львівська область
             </h4>
             <p className="text-xs text-slate-400">
-              Працюємо в усіх районах Львова (Галицький, Франківський, Сихівський, Личаківський, Шевченківський, Залізничний) та по області (Стрий, Дрогобич, Самбір, Червоноград, Жовква та ін.).
+              Працюємо в усіх районах Львова (Галицький, Франківський, Сихівський, Личаківський, Шевченківський, Залізничний) та по області.
             </p>
           </div>
 
@@ -149,8 +156,6 @@ export default function ContactsPage({ onOpenOrderModal }) {
         </div>
 
       </div>
-
-      <CtaBlock onOpenOrderModal={onOpenOrderModal} />
     </main>
   );
 }

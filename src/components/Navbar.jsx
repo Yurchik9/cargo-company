@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
 import { Phone, Send, MessageCircle, Clock, MapPin, Menu, X, ShieldCheck, Truck } from 'lucide-react';
 
 export default function Navbar({ onOpenOrderModal }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const navLinks = [
     { name: 'Головна', path: '/' },
-    { name: 'Послуги', path: '/services' },
-    { name: 'Ціни', path: '/prices' },
+    { name: 'Послуги та Ціни', path: '/services' },
     { name: 'Автопарк', path: '/fleet' },
     { name: 'Наші роботи', path: '/portfolio' },
     { name: 'Для бізнесу', path: '/business' },
     { name: 'Відгуки', path: '/reviews' },
     { name: 'Контакти', path: '/contacts' },
   ];
+
+  const isLinkActive = (path) => {
+    if (path === '/') return location.pathname === '/';
+    if (path === '/services') return location.pathname.startsWith('/services') || location.pathname.startsWith('/prices');
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full bg-slate-950/95 backdrop-blur-md border-b border-slate-800/80">
@@ -33,7 +39,7 @@ export default function Navbar({ onOpenOrderModal }) {
             </span>
             <span className="hidden sm:flex items-center gap-1.5 text-emerald-400 font-medium">
               <ShieldCheck className="w-3.5 h-3.5" />
-              Швидкий виїзд за 30 хвилин
+              Швидкий виїзд по Львову та області
             </span>
           </div>
 
@@ -85,22 +91,22 @@ export default function Navbar({ onOpenOrderModal }) {
 
         {/* Desktop Nav Links */}
         <nav className="hidden lg:flex items-center gap-5 text-sm font-medium">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              end={link.path === '/'}
-              className={({ isActive }) =>
-                `transition-colors py-1 relative text-xs xl:text-sm font-semibold ${
-                  isActive
+          {navLinks.map((link) => {
+            const active = isLinkActive(link.path);
+            return (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`transition-colors py-1 relative text-xs xl:text-sm font-semibold ${
+                  active
                     ? 'text-amber-400 font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400'
                     : 'text-slate-300 hover:text-amber-300'
-                }`
-              }
-            >
-              {link.name}
-            </NavLink>
-          ))}
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Phone Numbers & Action Button */}
@@ -123,7 +129,7 @@ export default function Navbar({ onOpenOrderModal }) {
 
           <button
             onClick={onOpenOrderModal}
-            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-105 active:scale-95"
+            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-105 active:scale-95"
           >
             Замовити
           </button>
@@ -143,21 +149,21 @@ export default function Navbar({ onOpenOrderModal }) {
       {mobileMenuOpen && (
         <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-4 py-4 space-y-4">
           <div className="flex flex-col space-y-2">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.path}
-                end={link.path === '/'}
-                onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `font-medium text-base py-2.5 border-b border-slate-800/50 flex items-center justify-between ${
-                    isActive ? 'text-amber-400 font-bold' : 'text-slate-200 hover:text-amber-300'
-                  }`
-                }
-              >
-                <span>{link.name}</span>
-              </NavLink>
-            ))}
+            {navLinks.map((link) => {
+              const active = isLinkActive(link.path);
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`font-medium text-base py-2.5 border-b border-slate-800/50 flex items-center justify-between ${
+                    active ? 'text-amber-400 font-bold' : 'text-slate-200 hover:text-amber-300'
+                  }`}
+                >
+                  <span>{link.name}</span>
+                </Link>
+              );
+            })}
           </div>
 
           <div className="pt-2 space-y-3">

@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
-import { Calculator, Users, Clock, Truck, ArrowUpCircle, ArrowRight, ShieldCheck, Check } from 'lucide-react';
+import { siteConfig } from '../config/siteConfig';
+import { Calculator, Users, Clock, Truck, ArrowUpCircle, ArrowRight, ShieldCheck, Check, Tag } from 'lucide-react';
 
 export default function CostCalculatorInline({ onApplyCalculation }) {
+  const [workType, setWorkType] = useState('loaders'); // 'loaders', 'handymen', 'demolition', 'rigging'
   const [numLoaders, setNumLoaders] = useState(2);
   const [hours, setHours] = useState(2);
   const [vehicle, setVehicle] = useState('bus'); // 'none', 'bus', 'hydroboard', 'truck'
   const [hasElevator, setHasElevator] = useState(true);
   const [floors, setFloors] = useState(1);
 
-  // Rates
-  const loaderHourlyRate = 350;
+  // Work type hourly rates per person
+  const workTypeRates = {
+    loaders: { label: 'Вантажники & Переїзд', rate: 350, serviceName: 'Вантажники Львів' },
+    handymen: { label: 'Підсобні & Складські роботи', rate: 350, serviceName: 'Складські роботи' },
+    demolition: { label: 'Демонтажні роботи', rate: 400, serviceName: 'Демонтажні роботи' },
+    rigging: { label: 'Такелажні роботи (Сейфи/Обладнання)', rate: 500, serviceName: 'Такелажні роботи' },
+  };
+
+  const currentWorkType = workTypeRates[workType] || workTypeRates.loaders;
+
+  // Vehicle rates
   const vehicleRates = {
     none: 0,
     bus: 450,        // 1.5t - 2t
@@ -17,16 +28,35 @@ export default function CostCalculatorInline({ onApplyCalculation }) {
     truck: 850       // 5t truck
   };
 
-  const loaderTotal = numLoaders * Math.max(2, hours) * loaderHourlyRate;
+  const loaderTotal = numLoaders * Math.max(2, hours) * currentWorkType.rate;
   const transportTotal = vehicleRates[vehicle] * (vehicle === 'none' ? 0 : Math.max(2, hours));
   const floorFee = !hasElevator && floors > 1 ? (floors - 1) * 50 * numLoaders : 0;
   const estimatedTotal = loaderTotal + transportTotal + floorFee;
 
   const handleBookWithCalculation = () => {
-    const vehicleName = vehicle === 'none' ? 'Без авто' : vehicle === 'bus' ? 'Бус 1.5-2т' : vehicle === 'hydroboard' ? 'Бус з Гідробортом 3т' : 'Вантажівка 5т';
-    const elevatorText = hasElevator ? 'Є ліфт' : `Без ліфта (${floors} поверх)`;
-    const summaryText = `${numLoaders} вантажники, ${hours} год, ${vehicleName}, ${elevatorText}`;
-    onApplyCalculation(summaryText);
+    const vehicleMap = {
+      none: "Без автомобіля (тільки вантажники)",
+      bus: "Вантажний бус / Газель (1.5 - 2т)",
+      hydroboard: "Бус з ГІДРОБОРТОМ (3т)",
+      truck: "Вантажівка 5 тонн (35-40 м³)"
+    };
+
+    const vehicleTitle = vehicleMap[vehicle] || siteConfig.transportOptions[0].title;
+    const elevatorText = hasElevator ? 'Є вантажний ліфт' : `Немає ліфта (${floors} поверх)`;
+
+    const detailedComment = `🧮 РОЗРАХУНОК З КАЛЬКУЛЯТОРА:
+• Вид робіт: ${currentWorkType.label} (${currentWorkType.rate} грн/год за чол)
+• Кількість працівників: ${numLoaders} чол. на ${hours} год
+• Вантажний транспорт: ${vehicleTitle}
+• Умови підйому: ${elevatorText}
+💰 Розрахункова сума: від ${estimatedTotal} грн`.trim();
+
+    onApplyCalculation({
+      service: currentWorkType.serviceName,
+      transport: vehicleTitle,
+      summary: detailedComment,
+      estimatedTotal
+    });
   };
 
   return (
@@ -36,13 +66,13 @@ export default function CostCalculatorInline({ onApplyCalculation }) {
         {/* Header */}
         <div className="text-center space-y-3 mb-10">
           <span className="text-amber-400 font-bold text-xs uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 px-3.5 py-1 rounded-full inline-flex items-center gap-1.5">
-            <Calculator className="w-3.5 h-3.5" /> Онлайн-Розрахунок
+            <Calculator className="w-3.5 h-3.5" /> Онлайн-Розрахунок за Тарифами
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-white font-outfit uppercase">
             КАЛЬКУЛЯТОР ВАРТОСТІ <span className="text-gradient-amber">ПОСЛУГ</span>
           </h2>
           <p className="text-slate-400 text-sm max-w-xl mx-auto">
-            Оберіть параметри роботи та дізнайтеся точну орієнтовну ціну виклику за 10 секунд.
+            Оберіть конкретний вид робіт та параметри замовлення для розрахунку реальної вартості.
           </p>
         </div>
 
@@ -54,11 +84,38 @@ export default function CostCalculatorInline({ onApplyCalculation }) {
             {/* Left Options */}
             <div className="space-y-6">
               
+              {/* Work Type Selector */}
+              <div>
+                <label className="flex items-center justify-between text-xs font-bold text-slate-300 mb-2.5">
+                  <span className="flex items-center gap-2">
+                    <Tag className="w-4 h-4 text-amber-400" /> Оберіть вид робіт:
+                  </span>
+                  <span className="text-amber-400 text-xs font-bold">{currentWorkType.rate} грн/год</span>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.entries(workTypeRates).map(([key, val]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setWorkType(key)}
+                      className={`p-3 rounded-2xl text-left border transition-all ${
+                        workType === key
+                          ? 'bg-amber-500/20 border-amber-500 text-white shadow-md shadow-amber-500/10'
+                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                      }`}
+                    >
+                      <p className="text-xs font-bold">{val.label}</p>
+                      <p className="text-[10px] text-amber-400 mt-0.5">{val.rate} грн/год</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Loaders Selection */}
               <div>
                 <label className="flex items-center justify-between text-xs font-bold text-slate-300 mb-2.5">
                   <span className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-amber-400" /> Кількість вантажників:
+                    <Users className="w-4 h-4 text-amber-400" /> Кількість працівників:
                   </span>
                   <span className="text-amber-400 text-sm font-black">{numLoaders} чол.</span>
                 </label>
@@ -74,7 +131,7 @@ export default function CostCalculatorInline({ onApplyCalculation }) {
                           : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
                       }`}
                     >
-                      {count} {count === 1 ? 'чол' : 'чол'}
+                      {count} чол
                     </button>
                   ))}
                 </div>
@@ -84,7 +141,7 @@ export default function CostCalculatorInline({ onApplyCalculation }) {
               <div>
                 <label className="flex items-center justify-between text-xs font-bold text-slate-300 mb-2.5">
                   <span className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-amber-400" /> Тривалість замовлення (хвилин 2 год):
+                    <Clock className="w-4 h-4 text-amber-400" /> Тривалість замовлення (мін. 2 год):
                   </span>
                   <span className="text-amber-400 text-sm font-black">{hours} год</span>
                 </label>
@@ -158,7 +215,7 @@ export default function CostCalculatorInline({ onApplyCalculation }) {
 
               <div className="space-y-2.5">
                 {[
-                  { id: 'none', label: 'Без автомобіля (тільки вантажники)', price: '0 грн/год' },
+                  { id: 'none', label: 'Без авто (тільки вантажники)', price: '0 грн/год' },
                   { id: 'bus', label: 'Вантажний бус / Газель (1.5 - 2т)', price: 'від 450 грн/год' },
                   { id: 'hydroboard', label: 'Бус з ГІДРОБОРТОМ (3т)', price: 'від 650 грн/год' },
                   { id: 'truck', label: 'Вантажівка 5 тонн (35-40 м³)', price: 'від 850 грн/год' },
@@ -192,14 +249,16 @@ export default function CostCalculatorInline({ onApplyCalculation }) {
           {/* Result Calculation Banner */}
           <div className="bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent p-6 rounded-2xl border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left space-y-1">
-              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Підсумковий розрахунок:</span>
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Розрахована сума:</span>
               <div className="flex items-baseline justify-center sm:justify-start gap-2">
                 <span className="text-3xl sm:text-4xl font-black text-amber-400 font-outfit">
                   від {estimatedTotal}
                 </span>
                 <span className="text-lg font-bold text-white">грн</span>
               </div>
-              <p className="text-[11px] text-slate-400">Включає {numLoaders} вантажників на {hours} год {vehicle !== 'none' ? '+ авто' : ''}</p>
+              <p className="text-[11px] text-slate-400">
+                {currentWorkType.label} ({numLoaders} чол × {hours} год @ {currentWorkType.rate} грн/год)
+              </p>
             </div>
 
             <button
