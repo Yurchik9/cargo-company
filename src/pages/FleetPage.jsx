@@ -5,7 +5,7 @@ import CtaBlock from '../components/CtaBlock';
 export default function FleetPage({ onOpenOrderModal }) {
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "Вантажний транспорт у Львові | Авто з гідробортом та рокдою | НІКА";
+    document.title = "Вантажний транспорт у Львові | Авто з гідробортом та роклою | SMART MOVING";
   }, []);
 
   return (

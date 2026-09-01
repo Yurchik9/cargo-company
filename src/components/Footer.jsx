@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
-import { Truck, MapPin, Clock, Send, MessageCircle, ArrowUp, Phone } from 'lucide-react';
+import { MapPin, Clock, Send, MessageCircle, ArrowUp, Phone } from 'lucide-react';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -17,13 +17,15 @@ export default function Footer() {
           
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                <Truck className="w-5 h-5 stroke-[2.5]" />
+            <Link to="/" className="group">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-black tracking-tight text-white font-outfit uppercase group-hover:text-amber-400 transition-colors">
+                  {siteConfig.companyName}
+                </span>
+                <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-500/30">
+                  ЛЬВІВ
+                </span>
               </div>
-              <span className="text-2xl font-black tracking-tight text-white font-outfit">
-                {siteConfig.companyName}
-              </span>
             </Link>
 
             <p className="text-slate-400 leading-relaxed max-w-sm">
@@ -111,7 +113,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
-          <p>© {new Date().getFullYear()} Служба вантажних перевезень «НІКА». Усі права захищено.</p>
+          <p>© {new Date().getFullYear()} Служба вантажних перевезень «SMART MOVING». Усі права захищено.</p>
           
           <button
             onClick={scrollToTop}

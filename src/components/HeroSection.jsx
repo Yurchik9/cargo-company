@@ -1,7 +1,7 @@
 import React from 'react';
 import { siteConfig } from '../config/siteConfig';
 import { Phone, Calculator, ShoppingBag, Clock, Award, CheckCircle } from 'lucide-react';
-import loadersWorkingImg from '../assets/images/loaders_working.png';
+import smartMovingBannerImg from '../assets/images/smart_moving_logo.jpg';
 
 export default function HeroSection({ onOpenOrderModal, onOpenCalculator }) {
   const handleHeroOrderClick = () => {
@@ -103,28 +103,28 @@ export default function HeroSection({ onOpenOrderModal, onOpenCalculator }) {
             </div>
           </div>
 
-          {/* Right Hero Visual Image Card */}
+          {/* Right Hero Visual Poster Image */}
           <div className="lg:col-span-5 relative">
-            <div className="relative rounded-3xl overflow-hidden border border-slate-800 shadow-2xl group">
+            <div className="relative rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl shadow-amber-500/10 group">
               <img
-                src={loadersWorkingImg}
-                alt="Вантажники Львів НІКА"
-                className="w-full h-[440px] object-cover group-hover:scale-105 transition-transform duration-700"
+                src={smartMovingBannerImg}
+                alt="SMART MOVING Львів - Вантажні перевезення"
+                className="w-full h-[480px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
 
               {/* Float Overlay Badge */}
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass-card border border-white/10 space-y-2">
+              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass-card border border-amber-500/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Award className="w-4 h-4" /> Надійний перевізник
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5 font-outfit">
+                    <Award className="w-4 h-4" /> SMART MOVING ЛЬВІВ
                   </span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-500/30">
-                    Львів та область
+                    24/7 Без вихідних
                   </span>
                 </div>
                 <p className="text-sm font-bold text-white">
-                  Професійні такелажні роботи та вантажні перевезення будь-якої складності.
+                  Професійні квартирні переїзди, вантажники та збірка меблів по Львову та області.
                 </p>
                 <p className="text-xs text-slate-300">
                   Телефонуйте зараз: <strong className="text-amber-400">{siteConfig.phones[0].display}</strong>
