@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
-import { Truck, MapPin, Clock, Send, MessageCircle, ArrowUp } from 'lucide-react';
+import { Truck, MapPin, Clock, Send, MessageCircle, ArrowUp, Phone } from 'lucide-react';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -17,8 +17,8 @@ export default function Footer() {
           
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-xl">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
                 <Truck className="w-5 h-5 stroke-[2.5]" />
               </div>
               <span className="text-2xl font-black tracking-tight text-white font-outfit">
@@ -38,6 +38,10 @@ export default function Footer() {
               <div className="flex items-center gap-2 text-slate-300">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>{siteConfig.location}</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-300">
+                <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{siteConfig.phones[0].display} | {siteConfig.phones[1].display}</span>
               </div>
             </div>
 
@@ -66,8 +70,7 @@ export default function Footer() {
             <h4 className="text-sm font-bold text-white font-outfit uppercase">Навігація</h4>
             <ul className="space-y-2 font-medium">
               <li><Link to="/" className="hover:text-amber-400 transition-colors">Головна</Link></li>
-              <li><Link to="/services" className="hover:text-amber-400 transition-colors">Послуги</Link></li>
-              <li><Link to="/prices" className="hover:text-amber-400 transition-colors">Ціни</Link></li>
+              <li><Link to="/services" className="hover:text-amber-400 transition-colors">Послуги та Ціни</Link></li>
               <li><Link to="/fleet" className="hover:text-amber-400 transition-colors">Вантажний автопарк</Link></li>
               <li><Link to="/portfolio" className="hover:text-amber-400 transition-colors">Наші роботи</Link></li>
               <li><Link to="/business" className="hover:text-amber-400 transition-colors">Для бізнесу</Link></li>
@@ -106,25 +109,13 @@ export default function Footer() {
 
         </div>
 
-        {/* SEO Keywords Tag Cloud */}
-        <div className="pt-8 border-t border-slate-900 space-y-3">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Популярні пошукові запити:</p>
-          <div className="flex flex-wrap gap-2 text-[10px] text-slate-500">
-            {["вантажники Львів", "грузчики Львів", "вантажники Львів ціна", "вантажні перевезення Львів", "переїзд Львів", "квартирний переїзд Львів", "офісний переїзд Львів", "такелажні роботи Львів", "підйом вантажу на поверх Львів", "вантажники на склад Львів", "підсобники Львів"].map((tag, i) => (
-              <span key={i} className="bg-slate-900 px-2 py-1 rounded border border-slate-800/60">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
         {/* Bottom Bar */}
-        <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
           <p>© {new Date().getFullYear()} Служба вантажних перевезень «НІКА». Усі права захищено.</p>
           
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1.5 text-slate-400 hover:text-amber-400 transition-colors"
+            className="flex items-center gap-1.5 text-slate-400 hover:text-amber-400 transition-colors font-bold uppercase tracking-wider cursor-pointer"
           >
             Нагору <ArrowUp className="w-3.5 h-3.5" />
           </button>

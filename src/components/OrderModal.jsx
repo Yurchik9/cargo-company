@@ -25,6 +25,9 @@ export default function OrderModal({ isOpen, onClose, initialService = '', initi
     if (!serviceTitle) return '';
     const titleLower = serviceTitle.toLowerCase();
 
+    if (titleLower.includes('монтаж') || titleLower.includes('збірка')) {
+      return 'Монтаж та збірка меблів. Потрібно змонтувати/зібрати меблі (кухня, шафа-купе, ліжко, стінка). Маємо власний електроінструмент.';
+    }
     if (titleLower.includes('квартирний')) {
       return 'Квартирний переїзд. Потрібно завантажити та підняти меблі (диван, шафа, побутова техніка). Є крихкі речі.';
     }
@@ -38,7 +41,7 @@ export default function OrderModal({ isOpen, onClose, initialService = '', initi
       return 'Складські роботи. Потрібні вантажники на зміну для розвантаження фури / розфокусування палет.';
     }
     if (titleLower.includes('підйом') || titleLower.includes('поверх')) {
-      return 'Підйом вантажу на поверх. Будматеріали в мішках / гіпсокартон. Потрібно уточнити наявність ліфта.';
+      return 'Підйом вантажу на поверхи. Будматеріали в мішках / гіпсокартон. Потрібно уточнити наявність ліфта.';
     }
     if (titleLower.includes('демонтаж')) {
       return 'Демонтажні роботи. Демонтаж плит, перегородок, фасування будівельного сміття в мішки.';
