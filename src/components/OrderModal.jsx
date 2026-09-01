@@ -155,7 +155,7 @@ export default function OrderModal({ isOpen, onClose, initialService = '', initi
     setStatus({ loading: true, success: false, error: '' });
 
     const messageText = `
-📦 **НОВЕ ЗАМОВЛЕННЯ СЛУЖБИ (НІКА)**
+📦 **НОВЕ ЗАМОВЛЕННЯ (SMART MOVING ЛЬВІВ)**
 👤 **Ім'я:** ${formData.name}
 📞 **Телефон:** ${formData.phone}
 🛠 **Послуга:** ${formData.service} (${selectedServiceObj.price})

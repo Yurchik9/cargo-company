@@ -9,12 +9,12 @@ import CtaBlock from '../components/CtaBlock';
 
 export default function HomePage({ onOpenOrderModal, onOpenCalculator }) {
   useEffect(() => {
-    document.title = "Вантажники та Вантажні Перевезення у Львові | НІКА 24/7";
+    document.title = "SMART MOVING - Вантажники та Вантажні Перевезення у Львові 24/7";
   }, []);
 
   return (
     <main className="space-y-0">
-      {/* 1. Main Hero Section (Calculator is triggered by "РОЗРАХУВАТИ ВАРТІСТЬ" button) */}
+      {/* 1. Main Hero Section */}
       <HeroSection onOpenOrderModal={onOpenOrderModal} onOpenCalculator={onOpenCalculator} />
 
       {/* 2. Popular Services Preview */}
@@ -84,7 +84,7 @@ export default function HomePage({ onOpenOrderModal, onOpenCalculator }) {
       {/* 3. Why Choose Us */}
       <WhyUsSection />
 
-      {/* 4. Quick Order Form (TZ Line 73-88) */}
+      {/* 4. Quick Order Form */}
       <QuickOrderSection />
 
       {/* 5. Bottom CTA */}

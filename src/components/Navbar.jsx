@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
-import { Phone, Send, MessageCircle, Clock, MapPin, Menu, X, ShieldCheck, Truck } from 'lucide-react';
+import { Phone, Send, MessageCircle, Clock, MapPin, Menu, X, ShieldCheck } from 'lucide-react';
 
 export default function Navbar({ onOpenOrderModal }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -69,24 +69,19 @@ export default function Navbar({ onOpenOrderModal }) {
 
       {/* Main Navigation */}
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-            <Truck className="w-6 h-6 stroke-[2.5]" />
+        {/* Brand Name Only (No Icon, No Image Logo) */}
+        <Link to="/" className="group">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl sm:text-3xl font-black tracking-tight text-white font-outfit uppercase group-hover:text-amber-400 transition-colors">
+              {siteConfig.companyName}
+            </span>
+            <span className="bg-amber-500/20 text-amber-400 text-[10px] sm:text-xs font-extrabold px-2 py-0.5 rounded border border-amber-500/30">
+              ЛЬВІВ
+            </span>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-black tracking-tight text-white font-outfit">
-                {siteConfig.companyName}
-              </span>
-              <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-500/30">
-                24/7
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 tracking-wide font-medium leading-none mt-0.5">
-              Вантажники та Перевезення Львів
-            </p>
-          </div>
+          <p className="text-[11px] text-slate-400 tracking-wide font-medium leading-none mt-0.5">
+            Вантажники та Перевезення Львів
+          </p>
         </Link>
 
         {/* Desktop Nav Links */}
