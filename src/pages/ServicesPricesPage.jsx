@@ -16,7 +16,7 @@ const CATEGORIES = [
   { id: 'all', name: 'Всі послуги' },
   { id: 'moving', name: 'Квартирні та Офісні переїзди' },
   { id: 'loaders', name: 'Вантажники та Підсобники' },
-  { id: 'rigging', name: 'Такелажні роботи та Обладнання' },
+  { id: 'rigging', name: 'Такелажні роботи & Збірка меблів' },
   { id: 'special', name: 'Спеціальні & Вивіз сміття' },
 ];
 
@@ -38,7 +38,7 @@ export default function ServicesPricesPage({ onOpenOrderModal }) {
       return services.filter(s => s.id === 'loaders-lviv' || s.id === 'warehouse-work' || s.id === 'handymen' || s.id === 'demolition-work');
     }
     if (selectedCategory === 'rigging') {
-      return services.filter(s => s.id === 'rigging-work' || s.id === 'heavy-equipment' || s.id === 'furniture-assembly');
+      return services.filter(s => s.id === 'rigging-work' || s.id === 'heavy-equipment' || s.id === 'furniture-disassembly' || s.id === 'furniture-assembly');
     }
     if (selectedCategory === 'special') {
       return services.filter(s => s.id === 'floor-lifting' || s.id === 'trash-removal');

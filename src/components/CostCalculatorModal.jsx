@@ -6,7 +6,7 @@ export default function CostCalculatorModal({ isOpen, onClose, onApplyCalculatio
   const [workType, setWorkType] = useState('loaders'); // 'loaders', 'handymen', 'demolition', 'rigging'
   const [numLoaders, setNumLoaders] = useState(2);
   const [hours, setHours] = useState(2);
-  const [vehicle, setVehicle] = useState('bus'); // 'none', 'bus', 'hydroboard', 'truck'
+  const [vehicle, setVehicle] = useState('bus'); // 'none', 'bus', 'hydroboard', 'truck', 'heavy_truck'
   const [hasElevator, setHasElevator] = useState(true);
   const [floors, setFloors] = useState(1);
 
@@ -27,7 +27,8 @@ export default function CostCalculatorModal({ isOpen, onClose, onApplyCalculatio
     none: 0,
     bus: 450,        // 1.5t bus
     hydroboard: 650, // 3t hydroboard
-    truck: 850       // 5t truck
+    truck: 850,      // 5t truck
+    heavy_truck: 1200 // 10-40t truck/fura
   };
 
   const loaderTotal = numLoaders * Math.max(2, hours) * currentWorkType.rate;
@@ -40,7 +41,8 @@ export default function CostCalculatorModal({ isOpen, onClose, onApplyCalculatio
       none: "Без автомобіля (тільки вантажники)",
       bus: "Вантажний бус / Газель (1.5 - 2т)",
       hydroboard: "Бус з ГІДРОБОРТОМ (3т)",
-      truck: "Вантажівка 5 тонн (35-40 м³)"
+      truck: "Вантажівка 5 тонн (35-40 м³)",
+      heavy_truck: "Важкогабаритна вантажівка / Фура (10 - 40 тонн)"
     };
 
     const vehicleTitle = vehicleMap[vehicle] || siteConfig.transportOptions[0].title;
@@ -176,6 +178,7 @@ export default function CostCalculatorModal({ isOpen, onClose, onApplyCalculatio
                 { id: 'bus', label: 'Вантажний бус / Газель (1.5 - 2т)', price: 'від 450 грн/год' },
                 { id: 'hydroboard', label: 'Бус з ГІДРОБОРТОМ (3т)', price: 'від 650 грн/год' },
                 { id: 'truck', label: 'Вантажівка 5 тонн (35-40 м³)', price: 'від 850 грн/год' },
+                { id: 'heavy_truck', label: 'Вантажівка / Фура (10 - 40т)', price: 'індивідуально' },
               ].map((v) => (
                 <button
                   key={v.id}
