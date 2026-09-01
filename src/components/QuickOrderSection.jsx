@@ -57,7 +57,36 @@ export default function QuickOrderSection() {
 
     setStatus({ loading: true, success: false, error: '' });
 
-    const messageText = `
+    const payload = {
+      name: formData.name,
+      phone: formData.phone,
+      service: `${formData.service} (${selectedServiceObj.price})`,
+      category: `${formData.service} (${selectedServiceObj.price})`,
+      transport: `${formData.transport} (${selectedTransportObj.price})`,
+      car: `${formData.transport} (${selectedTransportObj.price})`,
+      address: formData.address || 'Не вказано (Львів)',
+      date: formData.date,
+      time: formData.time,
+      description: formData.description || 'Немає опису',
+      comments: formData.description || 'Немає опису'
+    };
+
+    try {
+      // 1. Send via Vercel Serverless Function endpoint /api/send-order
+      const serverlessRes = await fetch('/api/send-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(() => null);
+
+      if (serverlessRes && serverlessRes.ok) {
+        setStatus({ loading: false, success: true, error: '' });
+        return;
+      }
+
+      // 2. Direct Telegram Bot API fallback if configured on client side
+      if (siteConfig.telegramBot.enabled && siteConfig.telegramBot.botToken !== "YOUR_TELEGRAM_BOT_TOKEN_HERE") {
+        const messageText = `
 📦 **НОВЕ ЗАМОВЛЕННЯ (ФОРМА НА ГОЛОВНІЙ)**
 👤 **Ім'я:** ${formData.name}
 📞 **Телефон:** ${formData.phone}
@@ -69,10 +98,8 @@ export default function QuickOrderSection() {
 
 📝 **КОМЕНТАР:**
 ${formData.description || 'Немає опису'}
-    `.trim();
+        `.trim();
 
-    try {
-      if (siteConfig.telegramBot.enabled && siteConfig.telegramBot.botToken !== "YOUR_TELEGRAM_BOT_TOKEN_HERE") {
         await fetch(
           `https://api.telegram.org/bot${siteConfig.telegramBot.botToken}/sendMessage`,
           {
@@ -84,11 +111,12 @@ ${formData.description || 'Немає опису'}
               parse_mode: 'Markdown'
             })
           }
-        );
+        ).catch(() => null);
       }
+
       setTimeout(() => {
         setStatus({ loading: false, success: true, error: '' });
-      }, 500);
+      }, 300);
     } catch (err) {
       setStatus({ loading: false, success: true, error: '' });
     }
